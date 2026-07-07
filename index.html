@@ -4,14 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>로또 번호 추첨기</title>
+    <script>
+      (() => {
+        const savedTheme = localStorage.getItem('theme');
+        const theme = savedTheme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
     <style>
       :root {
-        --bg: #111827;
-        --card: #1f2937;
+        color-scheme: light;
+        --bg-start: #f8fafc;
+        --bg-end: #e2e8f0;
+        --card: rgba(255, 255, 255, 0.94);
+        --text: #0f172a;
+        --sub: #64748b;
+        --border: rgba(15, 23, 42, 0.1);
+        --secondary-border: rgba(15, 23, 42, 0.2);
+        --shadow: rgba(15, 23, 42, 0.16);
+        --accent: #f59e0b;
+      }
+
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+        --bg-start: #0f172a;
+        --bg-end: #111827;
+        --card: rgba(31, 41, 55, 0.95);
         --text: #f9fafb;
         --sub: #9ca3af;
-        --accent: #f59e0b;
-        --accent-2: #ef4444;
+        --border: rgba(255, 255, 255, 0.08);
+        --secondary-border: rgba(255, 255, 255, 0.2);
+        --shadow: rgba(0, 0, 0, 0.3);
       }
 
       * {
@@ -21,27 +44,46 @@
       body {
         margin: 0;
         font-family: "Pretendard", "Segoe UI", sans-serif;
-        background: linear-gradient(135deg, #0f172a, var(--bg));
+        background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
         color: var(--text);
         min-height: 100vh;
         display: grid;
         place-items: center;
         padding: 24px;
+        transition: background 0.25s ease, color 0.25s ease;
       }
 
       .app {
         width: min(100%, 720px);
-        background: rgba(31, 41, 55, 0.95);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        position: relative;
+        background: var(--card);
+        border: 1px solid var(--border);
         border-radius: 24px;
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 24px 80px var(--shadow);
         padding: 32px;
         text-align: center;
+        transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .theme-toggle {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        display: grid;
+        place-items: center;
+        background: transparent;
+        color: var(--text);
+        border: 1px solid var(--secondary-border);
+        font-size: 1.25rem;
       }
 
       h1 {
         margin: 0 0 10px;
         font-size: 2rem;
+        padding: 0 48px;
       }
 
       p {
@@ -97,6 +139,11 @@
         transform: translateY(-2px);
       }
 
+      button:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+      }
+
       .primary {
         background: var(--accent);
         color: #111827;
@@ -105,7 +152,7 @@
       .secondary {
         background: transparent;
         color: var(--text);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid var(--secondary-border);
       }
 
       .hint {
@@ -121,10 +168,18 @@
         color: var(--sub);
         font-size: 1rem;
       }
+
+      @media (max-width: 520px) {
+        .app { padding: 76px 20px 28px; }
+        h1 { padding: 0; }
+      }
     </style>
   </head>
   <body>
     <main class="app">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="다크 모드로 전환" title="다크 모드로 전환">
+        <span aria-hidden="true">🌙</span>
+      </button>
       <h1>로또 번호 추첨기</h1>
       <p>클릭 한 번으로 오늘의 행운의 번호를 뽑아보세요.</p>
 
@@ -144,6 +199,28 @@
       const drawBtn = document.getElementById('drawBtn');
       const resetBtn = document.getElementById('resetBtn');
       const numberArea = document.getElementById('numberArea');
+      const themeToggle = document.getElementById('themeToggle');
+
+      function updateThemeButton(theme) {
+        const isDark = theme === 'dark';
+        const label = isDark ? '화이트 모드로 전환' : '다크 모드로 전환';
+        themeToggle.querySelector('span').textContent = isDark ? '☀️' : '🌙';
+        themeToggle.setAttribute('aria-label', label);
+        themeToggle.title = label;
+      }
+
+      function setTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+        localStorage.setItem('theme', theme);
+        updateThemeButton(theme);
+      }
+
+      updateThemeButton(document.documentElement.dataset.theme);
+
+      themeToggle.addEventListener('click', () => {
+        const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        setTheme(nextTheme);
+      });
 
       function drawNumbers() {
         const numbers = new Set();
