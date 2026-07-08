@@ -72,6 +72,12 @@ function renderPolicies(){
   $('#moreButton').style.display=items.length>state.visible?'block':'none';updateSavedCount();
 }
 function renderContents(){$('#contentGrid').innerHTML=state.contents.slice(0,3).map(c=>`<a class="content-card" href="${safeUrl(c.url||'https://www.youthcenter.go.kr')}" target="_blank" rel="noopener"><div class="content-thumb"><span>${escapeHtml(c.type)}</span><b>${escapeHtml(c.category)}<br>실전 가이드</b></div><div class="content-body"><small>${escapeHtml(c.category)}</small><h3>${escapeHtml(c.title)}</h3><span>${escapeHtml(c.date)}</span></div></a>`).join('')}
+function renderSavedPolicies(){
+  const items=state.policies.filter(policy=>state.saved.has(policy.id));
+  $('#savedList').innerHTML=items.map(policy=>`<div class="saved-item"><a href="${safeUrl(policy.url)}" target="_blank" rel="noopener">${escapeHtml(policy.title)}</a><button class="save saved" data-saved-remove="${escapeHtml(policy.id)}" type="button" aria-label="${escapeHtml(policy.title)} 저장 해제">♥</button></div>`).join('')||'<div class="saved-empty">아직 저장한 정책이 없어요.</div>';
+}
+function openSavedPolicies(){renderSavedPolicies();$('#savedModal').hidden=false;document.body.classList.add('modal-open');$('.saved-close').focus()}
+function closeSavedPolicies(){$('#savedModal').hidden=true;document.body.classList.remove('modal-open');$('#savedButton').focus()}
 function render(){renderPolicies();renderContents()}
 function escapeHtml(v){return clean(v).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
 function safeUrl(v){try{const u=new URL(v,location.href);return ['http:','https:'].includes(u.protocol)?u.href:'#'}catch{return '#'}}
@@ -83,7 +89,9 @@ document.querySelectorAll('[data-query]').forEach(b=>b.addEventListener('click',
 $('#categories').addEventListener('click',e=>{const b=e.target.closest('[data-category]');if(!b)return;document.querySelectorAll('.category').forEach(x=>x.classList.remove('active'));b.classList.add('active');state.category=b.dataset.category;state.visible=6;renderPolicies();$('#policies').scrollIntoView({behavior:'smooth',block:'start'})});
 $('#policyGrid').addEventListener('click',e=>{const b=e.target.closest('[data-save]');if(!b)return;const id=b.dataset.save;if(state.saved.has(id)){state.saved.delete(id);toast('저장에서 삭제했어요.')}else{state.saved.add(id);toast('관심 정책으로 저장했어요.')}renderPolicies()});
 $('#moreButton').addEventListener('click',()=>{state.visible+=6;renderPolicies()});
-$('#savedButton').addEventListener('click',()=>{toast(state.saved.size?`저장한 정책이 ${state.saved.size}개 있어요.`:'아직 저장한 정책이 없어요.')});
+$('#savedButton').addEventListener('click',openSavedPolicies);
+$('#savedModal').addEventListener('click',e=>{const remove=e.target.closest('[data-saved-remove]');if(remove){state.saved.delete(remove.dataset.savedRemove);renderPolicies();renderSavedPolicies();toast('저장에서 삭제했어요.');return}if(e.target.closest('[data-close-saved]'))closeSavedPolicies()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#savedModal').hidden)closeSavedPolicies()});
 $('#sortSelect').addEventListener('change',event=>{state.sort=event.target.value;state.visible=6;renderPolicies();toast(state.sort==='semin'?'세민님의 조건에 맞는 정책만 모았어요.':'정렬 기준을 적용했어요.')});
 $('#clearPersonalized').addEventListener('click',()=>{state.sort='recommended';$('#sortSelect').value='recommended';state.visible=6;renderPolicies()});
 $('#menuButton').addEventListener('click',()=>toast('정책 검색과 콘텐츠 메뉴를 준비했어요.'));

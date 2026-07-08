@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="gate.css">
   <link rel="stylesheet" href="personalized.css">
+  <link rel="stylesheet" href="saved-policies.css">
 </head>
 <body class="locked">
   <div class="access-gate" id="accessGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
@@ -106,6 +107,17 @@
   </main>
 
   <footer><div class="footer-inner"><div><a class="brand footer-brand" href="#"><span class="brand-mark"><span></span></span><span>청년나침반</span></a><p>청년의 가능성이 정책과 만나는 곳.</p></div><div class="footer-links"><a href="#policies">정책 찾기</a><a href="#content">청년 콘텐츠</a><a href="https://www.youthcenter.go.kr/cmnFooter/openapiIntro/oaiGuide" target="_blank" rel="noopener">데이터 출처</a></div><p class="copyright">데이터 제공: 온통청년 · © 2026 청년나침반</p></div></footer>
+
+  <div class="saved-modal" id="savedModal" hidden>
+    <button class="saved-backdrop" type="button" data-close-saved aria-label="저장한 정책 닫기"></button>
+    <section class="saved-panel" role="dialog" aria-modal="true" aria-labelledby="savedTitle">
+      <div class="saved-panel-header">
+        <div><span class="section-kicker">SAVED POLICIES</span><h2 id="savedTitle">저장한 정책</h2></div>
+        <button class="saved-close" type="button" data-close-saved aria-label="닫기">×</button>
+      </div>
+      <div class="saved-list" id="savedList"></div>
+    </section>
+  </div>
 
   <div class="toast" id="toast" role="status"></div>
   <script src="app.js"></script>
