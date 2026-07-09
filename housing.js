@@ -24,6 +24,7 @@ function normalizeDate(value){
   const match=raw.match(/(\d{4})[.-]?(\d{2})[.-]?(\d{2})/);
   return match?`${match[1]}-${match[2]}-${match[3]}`:raw;
 }
+function todayKst(){const now=new Date();return new Date(now.toLocaleDateString('en-CA',{timeZone:'Asia/Seoul'})).getTime()}
 function inferTags(item,text){
   const tags=new Set(Array.isArray(item.tags)?item.tags:[]);
   if(/청년|청년우대|청년 특별|청년특별/.test(text))tags.add('청년우대');
@@ -49,13 +50,14 @@ function normalizeHousing(item,index){
   return {id:String(pick(item,['주택관리번호','공고번호','id','PBLANC_NO','pblancNo','HOUSE_MANAGE_NO'],`housing-${index}`)),area,type,name,summary,recruitDate,applyStart,applyEnd,households,tags:inferTags(item,text),url:pick(item,['모집공고홈페이지주소','홈페이지주소','url','PBLANC_URL','DETAIL_URL'],'https://www.applyhome.co.kr')};
 }
 function dateValue(value){const time=Date.parse(`${value}T23:59:59+09:00`);return Number.isFinite(time)?time:Number.MAX_SAFE_INTEGER}
+function isOpenOrUpcoming(item){return dateValue(item.applyEnd)>=todayKst()}
 function youthScore(item){let score=0;if(item.tags.includes('청년우대'))score+=100;if(item.tags.includes('생애최초'))score+=35;if(item.tags.includes('공공분양')||item.tags.includes('임대'))score+=20;if(/서울|경기|인천|수도권/.test(`${item.area} ${item.name}`))score+=10;return score}
 function filtered(){
   const q=state.query.toLowerCase();
   let items=state.items.filter(item=>{
     const text=`${item.name} ${item.area} ${item.type} ${item.summary} ${item.tags.join(' ')}`.toLowerCase();
     const filterOk=state.filters.has('전체')||[...state.filters].every(filter=>item.tags.includes(filter)||item.type.includes(filter));
-    return filterOk&&(!q||text.includes(q));
+    return isOpenOrUpcoming(item)&&filterOk&&(!q||text.includes(q));
   });
   if(state.sort==='latest')items.sort((a,b)=>String(b.recruitDate).localeCompare(String(a.recruitDate)));
   else if(state.sort==='youth')items.sort((a,b)=>youthScore(b)-youthScore(a)||dateValue(a.applyEnd)-dateValue(b.applyEnd));
@@ -68,7 +70,7 @@ function setStatus(message,type='warn'){const el=$('#housingStatus');el.innerHTM
 function render(){
   const items=filtered();
   $('#housingTotal').textContent=state.items.length.toLocaleString();
-  $('#openTotal').textContent=state.items.filter(item=>dateValue(item.applyEnd)>=Date.now()).length.toLocaleString();
+  $('#openTotal').textContent=state.items.filter(isOpenOrUpcoming).length.toLocaleString();
   $('#housingResultLabel').textContent=state.filters.has('전체')?(state.query?`검색 결과 ${items.length}개`:'전체 공고'):`필터 결과 ${items.length}개`;
   $('#housingGrid').innerHTML=items.slice(0,state.visible).map(item=>`<article class="housing-card"><div class="housing-card-top"><span class="housing-tag primary">${escapeHtml(item.type)}</span><span class="housing-tag">${escapeHtml(item.tags[0]||'공고')}</span><span class="housing-area">${escapeHtml(item.area)}</span></div><h3>${escapeHtml(item.name)}</h3><p>${escapeHtml(item.summary)}</p><div class="housing-card-meta"><span>접수 기간<b>${escapeHtml(item.applyStart||'공고 확인')} ~ ${escapeHtml(item.applyEnd||'공고 확인')}</b></span><span>공급 규모<b>${escapeHtml(item.households)}</b></span></div><a class="housing-card-link" href="${safeUrl(item.url)}" target="_blank" rel="noopener">원문 보기 <span>→</span></a></article>`).join('')||'<div class="empty-state">조건에 맞는 청약 공고가 없어요.<br>검색어나 필터를 바꿔보세요.</div>';
   $('#housingMore').style.display=items.length>state.visible?'block':'none';
