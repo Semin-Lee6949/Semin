@@ -1,0 +1,82 @@
+{
+  "data": [
+    {
+      "id": "sample-1",
+      "area": "서울",
+      "type": "공공분양",
+      "name": "서울 공공주택 청년 특별공급",
+      "summary": "청년과 생애최초 대상자를 위한 공공분양 특별공급 공고입니다.",
+      "recruitDate": "2026-07-01",
+      "applyStart": "2026-07-15",
+      "applyEnd": "2026-07-18",
+      "households": "128세대",
+      "tags": ["청년우대", "생애최초", "공공분양"],
+      "url": "https://www.applyhome.co.kr"
+    },
+    {
+      "id": "sample-2",
+      "area": "경기",
+      "type": "민영주택",
+      "name": "수도권 민영주택 일반공급",
+      "summary": "수도권 민영주택 청약 접수 일정과 공급 규모를 확인하세요.",
+      "recruitDate": "2026-07-03",
+      "applyStart": "2026-07-20",
+      "applyEnd": "2026-07-22",
+      "households": "412세대",
+      "tags": ["민영주택"],
+      "url": "https://www.applyhome.co.kr"
+    },
+    {
+      "id": "sample-3",
+      "area": "인천",
+      "type": "임대",
+      "name": "청년 매입임대 예비입주자 모집",
+      "summary": "무주택 청년을 대상으로 하는 임대주택 예비입주자 모집 공고입니다.",
+      "recruitDate": "2026-06-28",
+      "applyStart": "2026-07-10",
+      "applyEnd": "2026-07-24",
+      "households": "90호",
+      "tags": ["청년우대", "임대"],
+      "url": "https://www.applyhome.co.kr"
+    },
+    {
+      "id": "sample-4",
+      "area": "부산",
+      "type": "공공분양",
+      "name": "생애최초 특별공급 주택청약",
+      "summary": "무주택 실수요자를 위한 생애최초 특별공급 일정입니다.",
+      "recruitDate": "2026-07-05",
+      "applyStart": "2026-07-23",
+      "applyEnd": "2026-07-25",
+      "households": "76세대",
+      "tags": ["생애최초", "공공분양"],
+      "url": "https://www.applyhome.co.kr"
+    },
+    {
+      "id": "sample-5",
+      "area": "대전",
+      "type": "민영주택",
+      "name": "신혼부부 특별공급 아파트",
+      "summary": "신혼부부 특별공급 물량이 포함된 민영주택 청약 공고입니다.",
+      "recruitDate": "2026-07-07",
+      "applyStart": "2026-07-28",
+      "applyEnd": "2026-07-30",
+      "households": "204세대",
+      "tags": ["신혼부부", "민영주택"],
+      "url": "https://www.applyhome.co.kr"
+    },
+    {
+      "id": "sample-6",
+      "area": "전국",
+      "type": "임대",
+      "name": "청년 전세임대 입주자 모집",
+      "summary": "전국 단위 청년 전세임대 입주자를 모집합니다.",
+      "recruitDate": "2026-06-25",
+      "applyStart": "2026-07-08",
+      "applyEnd": "2026-08-02",
+      "households": "1,000호",
+      "tags": ["청년우대", "임대"],
+      "url": "https://www.applyhome.co.kr"
+    }
+  ]
+}

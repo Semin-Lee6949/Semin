@@ -14,9 +14,12 @@
 4. 아래 항목을 각각 등록합니다.
    - `YOUTH_POLICY_API_KEY`: 정책 API 인증키
    - `YOUTH_CONTENT_API_KEY`: 콘텐츠 API 인증키
+   - `HOUSING_SUBSCRIPTION_API_KEY`: 주택청약 API 인증키
+   - `HOUSING_SUBSCRIPTION_API_URL`: 주택청약 API 요청 URL. 없으면 `https://api.odcloud.kr/api/ApplyhomeInfoDetailSvc/v1/getAPTLttotPblancDetail`을 사용합니다.
 5. 등록이 끝나면 상단의 Actions 탭으로 이동합니다.
 6. `Sync youth data` 워크플로우를 열고 Run workflow 버튼을 눌러 한 번 수동 실행합니다.
 
 정책 API `/go/ythip/getPlcy`와 콘텐츠 API `/go/ythip/getContent`는 `pageSize=100`, `rtnType=json`으로 요청합니다.
+주택청약 API는 `serviceKey`, `page=1`, `perPage=100`, `returnType=JSON`으로 요청하고, 응답은 `data/housing.json`에 저장합니다.
 
 2026-07-08 검증 결과 정책 키는 정상 인증되어 총 2,633건을 반환했습니다. 다만 정책명 등 핵심 필드는 제공처 응답에서 모두 `null`이었고, 콘텐츠 API는 HTTP 500을 반환했습니다. 제공처 장애 중에는 화면이 미리보기 데이터를 유지합니다.

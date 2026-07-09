@@ -20,6 +20,8 @@ jobs:
         env:
           YOUTH_POLICY_API_KEY: ${{ secrets.YOUTH_POLICY_API_KEY }}
           YOUTH_CONTENT_API_KEY: ${{ secrets.YOUTH_CONTENT_API_KEY }}
+          HOUSING_SUBSCRIPTION_API_KEY: ${{ secrets.HOUSING_SUBSCRIPTION_API_KEY }}
+          HOUSING_SUBSCRIPTION_API_URL: ${{ secrets.HOUSING_SUBSCRIPTION_API_URL }}
         run: node scripts/sync-data.mjs
       - name: Commit refreshed data
         run: |

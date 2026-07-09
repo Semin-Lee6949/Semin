@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="청년과 신혼부부에게 필요한 주택청약 정보를 조건별로 탐색하는 페이지">
+  <meta name="theme-color" content="#173f35">
+  <title>주택청약 — 청년나침반</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="gate.css">
+  <link rel="stylesheet" href="housing.css">
+</head>
+<body class="locked housing-page">
+  <div class="access-gate" id="accessGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <form class="gate-card" id="gateForm">
+      <span class="brand-mark gate-mark" aria-hidden="true"><span></span></span>
+      <span class="section-kicker">PRIVATE ACCESS</span>
+      <h1 id="gateTitle">청년나침반에 오신 것을<br>환영합니다.</h1>
+      <p>공유받은 비밀번호를 입력해 주세요.</p>
+      <label class="sr-only" for="gatePassword">접속 비밀번호</label>
+      <input id="gatePassword" type="password" inputmode="numeric" maxlength="4" placeholder="비밀번호 4자리" autocomplete="current-password" required>
+      <button type="submit">입장하기 <span>→</span></button>
+      <small id="gateError" role="alert"></small>
+    </form>
+  </div>
+
+  <a class="skip" href="#main">본문 바로가기</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="청년나침반 홈">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span>청년나침반</span>
+      </a>
+      <nav class="nav" aria-label="주요 메뉴">
+        <a href="index.html#policies">정책 찾기</a>
+        <a class="active" href="housing.html">주택청약</a>
+        <a href="index.html#content">청년 콘텐츠</a>
+        <a href="index.html#guide">이용 가이드</a>
+      </nav>
+      <a class="header-cta" href="https://www.applyhome.co.kr" target="_blank" rel="noopener">청약홈 바로가기 <span>→</span></a>
+      <button class="menu-button" id="menuButton" type="button" aria-label="메뉴 열기"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="housing-hero">
+      <div class="housing-hero-inner">
+        <div class="housing-copy">
+          <span class="section-kicker">HOUSING SUBSCRIPTION</span>
+          <h1>내 조건에 맞는<br>주택청약 공고를 빠르게 찾기</h1>
+          <p>청년우대, 생애최초, 신혼부부, 공공분양, 임대주택까지 주요 조건으로 걸러보고 신청 기간을 확인하세요.</p>
+          <form class="housing-search" id="housingSearchForm" role="search">
+            <label class="sr-only" for="housingSearchInput">주택청약 검색</label>
+            <input id="housingSearchInput" type="search" placeholder="지역, 단지명, 공급유형 검색" autocomplete="off">
+            <button type="submit">검색</button>
+          </form>
+        </div>
+        <div class="housing-summary" aria-label="주택청약 데이터 현황">
+          <div><small>확인 가능한 공고</small><strong id="housingTotal">0</strong></div>
+          <div><small>신청 진행·예정</small><strong id="openTotal">0</strong></div>
+          <a href="https://www.applyhome.co.kr" target="_blank" rel="noopener">공식 청약홈에서 원문 확인</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="housing-panel" aria-labelledby="filterTitle">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">FILTER</span>
+          <h2 id="filterTitle">필요한 조건만 골라보기</h2>
+          <p>중복 선택해서 청년에게 유리한 공고를 좁혀볼 수 있어요.</p>
+        </div>
+        <div class="housing-sort">
+          <span id="housingResultLabel">전체 공고</span>
+          <select id="housingSort" aria-label="주택청약 정렬 기준">
+            <option value="deadline">접수 마감순</option>
+            <option value="latest">공고 최신순</option>
+            <option value="youth">청년 추천순</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="housing-filters" id="housingFilters" aria-label="주택청약 필터">
+        <button class="active" type="button" data-filter="전체">전체</button>
+        <button type="button" data-filter="청년우대">청년우대</button>
+        <button type="button" data-filter="생애최초">생애최초</button>
+        <button type="button" data-filter="신혼부부">신혼부부</button>
+        <button type="button" data-filter="공공분양">공공분양</button>
+        <button type="button" data-filter="민영주택">민영주택</button>
+        <button type="button" data-filter="임대">임대</button>
+      </div>
+
+      <div class="status-message show" id="housingStatus" role="status"><span></span> 주택청약 데이터를 확인하고 있어요.</div>
+      <div class="housing-grid" id="housingGrid" aria-live="polite"></div>
+      <button class="more-button" id="housingMore" type="button">공고 더 보기 <span>↓</span></button>
+    </section>
+  </main>
+
+  <footer><div class="footer-inner"><div><a class="brand footer-brand" href="index.html"><span class="brand-mark"><span></span></span><span>청년나침반</span></a><p>청년의 가능성이 정책과 만나는 곳.</p></div><div class="footer-links"><a href="index.html#policies">정책 찾기</a><a href="housing.html">주택청약</a><a href="https://www.applyhome.co.kr" target="_blank" rel="noopener">청약홈</a></div><p class="copyright">데이터 제공: 공공데이터 · © 2026 청년나침반</p></div></footer>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="housing.js"></script>
+</body>
+</html>
