@@ -15,7 +15,7 @@
    - `YOUTH_POLICY_API_KEY`: 정책 API 인증키
    - `YOUTH_CONTENT_API_KEY`: 콘텐츠 API 인증키
    - `HOUSING_SUBSCRIPTION_API_KEY`: 주택청약 API 인증키
-   - `HOUSING_SUBSCRIPTION_API_URL`: 주택청약 API 요청 URL. 없으면 `https://api.odcloud.kr/api/ApplyhomeInfoDetailSvc/v1/getAPTLttotPblancDetail`을 사용합니다.
+   - `HOUSING_SUBSCRIPTION_API_URL`: 주택청약 API 요청 URL. 없으면 `https://api.odcloud.kr/api/15101046/v1/uddi:14a46595-03dd-47d3-a418-d64e52820598`을 사용합니다.
 5. 등록이 끝나면 상단의 Actions 탭으로 이동합니다.
 6. `Sync youth data` 워크플로우를 열고 Run workflow 버튼을 눌러 한 번 수동 실행합니다.
 

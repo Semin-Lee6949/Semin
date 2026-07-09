@@ -4,7 +4,7 @@ const feeds = {
   policy: { path: '/go/ythip/getPlcy', key: process.env.YOUTH_POLICY_API_KEY },
   content: { path: '/go/ythip/getContent', key: process.env.YOUTH_CONTENT_API_KEY },
   housing: {
-    url: process.env.HOUSING_SUBSCRIPTION_API_URL || 'https://api.odcloud.kr/api/ApplyhomeInfoDetailSvc/v1/getAPTLttotPblancDetail',
+    url: process.env.HOUSING_SUBSCRIPTION_API_URL || 'https://api.odcloud.kr/api/15101046/v1/uddi:14a46595-03dd-47d3-a418-d64e52820598',
     key: process.env.HOUSING_SUBSCRIPTION_API_KEY,
     params: { page: '1', perPage: '100', returnType: 'JSON' }
   }
@@ -39,7 +39,7 @@ for (const [name, feed] of Object.entries(feeds)) {
       ? ['plcyNm', 'polyBizSjnm', 'title']
       : name === 'content'
         ? ['pstTtl', 'contentTitle', 'title']
-        : ['HOUSE_NM', 'houseNm', 'hsmpNm', 'pblancNm', 'SUPLY_NM', 'name', 'title'];
+        : ['주택명', 'HOUSE_NM', 'houseNm', 'hsmpNm', 'pblancNm', 'SUPLY_NM', 'name', 'title'];
     const hasUsableItem = Array.isArray(items) && items.some(item => titleKeys.some(key => String(item?.[key] || '').trim()));
     if (!hasUsableItem) throw new Error('핵심 데이터 필드가 비어 있습니다. 기존 파일을 유지합니다.');
     await writeFile(`data/${name}.json`, JSON.stringify(data), 'utf8');

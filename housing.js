@@ -35,16 +35,18 @@ function inferTags(item,text){
   return [...tags];
 }
 function normalizeHousing(item,index){
-  const name=clean(pick(item,['HOUSE_NM','houseNm','hsmpNm','pblancNm','SUPLY_NM','name','title'],'주택청약 공고'));
-  const area=clean(pick(item,['SUBSCRPT_AREA_CODE_NM','sido','area','region','HSSPLY_ADRES'],'전국')).split(' ')[0]||'전국';
-  const type=clean(pick(item,['HOUSE_SECD_NM','suplyTy','type','SPSPLY_SECD_NM'],'주택청약'));
-  const summary=clean(pick(item,['summary','description','HSSPLY_ADRES','BSNS_MBY_NM'],'공급 위치와 신청 조건은 원문 공고에서 확인해 주세요.'));
-  const recruitDate=normalizeDate(pick(item,['RCRIT_PBLANC_DE','pblancDate','recruitDate','PBLANC_DE']));
-  const applyStart=normalizeDate(pick(item,['SUBSCRPT_RCEPT_BGNDE','RCEPT_BGNDE','applyStart','SPSPLY_RCEPT_BGNDE']));
-  const applyEnd=normalizeDate(pick(item,['SUBSCRPT_RCEPT_ENDDE','RCEPT_ENDDE','applyEnd','SPSPLY_RCEPT_ENDDE']));
-  const households=clean(pick(item,['TOT_SUPLY_HSHLDCO','SUPLY_HSHLDCO','households','supplyCount'],'공고 확인'));
+  const name=clean(pick(item,['주택명','HOUSE_NM','houseNm','hsmpNm','pblancNm','SUPLY_NM','name','title'],'주택청약 공고'));
+  const area=clean(pick(item,['공급지역명','SUBSCRPT_AREA_CODE_NM','sido','area','region','HSSPLY_ADRES'],'전국')).split(' ')[0]||'전국';
+  const type=clean(pick(item,['분양구분코드명','주택구분코드명','주택상세구분코드명','HOUSE_SECD_NM','suplyTy','type','SPSPLY_SECD_NM'],'주택청약'));
+  const location=clean(pick(item,['공급위치','HSSPLY_ADRES'],''));
+  const company=clean(pick(item,['건설업체명_시공사','사업주체명_시행사','BSNS_MBY_NM'],''));
+  const summary=clean(pick(item,['summary','description'],location||company||'공급 위치와 신청 조건은 원문 공고에서 확인해 주세요.'));
+  const recruitDate=normalizeDate(pick(item,['모집공고일','RCRIT_PBLANC_DE','pblancDate','recruitDate','PBLANC_DE']));
+  const applyStart=normalizeDate(pick(item,['청약접수시작일','특별공급접수시작일','해당지역1순위접수시작일','SUBSCRPT_RCEPT_BGNDE','RCEPT_BGNDE','applyStart','SPSPLY_RCEPT_BGNDE']));
+  const applyEnd=normalizeDate(pick(item,['청약접수종료일','특별공급접수종료일','해당지역2순위접수종료일','기타지역2순위접수종료일','SUBSCRPT_RCEPT_ENDDE','RCEPT_ENDDE','applyEnd','SPSPLY_RCEPT_ENDDE']));
+  const households=clean(pick(item,['공급규모','TOT_SUPLY_HSHLDCO','SUPLY_HSHLDCO','households','supplyCount'],'공고 확인'));
   const text=`${name} ${area} ${type} ${summary} ${clean(JSON.stringify(item))}`;
-  return {id:String(pick(item,['id','PBLANC_NO','pblancNo','HOUSE_MANAGE_NO'],`housing-${index}`)),area,type,name,summary,recruitDate,applyStart,applyEnd,households,tags:inferTags(item,text),url:pick(item,['url','PBLANC_URL','DETAIL_URL'],'https://www.applyhome.co.kr')};
+  return {id:String(pick(item,['주택관리번호','공고번호','id','PBLANC_NO','pblancNo','HOUSE_MANAGE_NO'],`housing-${index}`)),area,type,name,summary,recruitDate,applyStart,applyEnd,households,tags:inferTags(item,text),url:pick(item,['모집공고홈페이지주소','홈페이지주소','url','PBLANC_URL','DETAIL_URL'],'https://www.applyhome.co.kr')};
 }
 function dateValue(value){const time=Date.parse(`${value}T23:59:59+09:00`);return Number.isFinite(time)?time:Number.MAX_SAFE_INTEGER}
 function youthScore(item){let score=0;if(item.tags.includes('청년우대'))score+=100;if(item.tags.includes('생애최초'))score+=35;if(item.tags.includes('공공분양')||item.tags.includes('임대'))score+=20;if(/서울|경기|인천|수도권/.test(`${item.area} ${item.name}`))score+=10;return score}
@@ -76,7 +78,7 @@ async function loadHousing(){
     const response=await fetch('data/housing.json',{headers:{Accept:'application/json'},cache:'no-cache'});
     if(!response.ok)throw new Error(`DATA ${response.status}`);
     const data=await response.json();
-    const items=deepItems(data).filter(item=>clean(pick(item,['HOUSE_NM','houseNm','hsmpNm','pblancNm','SUPLY_NM','name','title'])));
+    const items=deepItems(data).filter(item=>clean(pick(item,['주택명','HOUSE_NM','houseNm','hsmpNm','pblancNm','SUPLY_NM','name','title'])));
     if(!items.length)throw new Error('usable fields empty');
     state.items=items.map(normalizeHousing);
     setStatus('주택청약 최신 데이터로 업데이트했습니다.','ok');
