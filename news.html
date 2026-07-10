@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="청년정책, 주거, 일자리, 금융 뉴스를 한눈에 읽는 청년나침반 뉴스 페이지">
+  <meta name="theme-color" content="#173f35">
+  <title>뉴스 — 청년나침반</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="gate.css">
+  <link rel="stylesheet" href="news.css">
+</head>
+<body class="locked news-page">
+  <div class="access-gate" id="accessGate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <form class="gate-card" id="gateForm">
+      <span class="brand-mark gate-mark" aria-hidden="true"><span></span></span>
+      <span class="section-kicker">PRIVATE ACCESS</span>
+      <h1 id="gateTitle">청년나침반에 오신 것을<br>환영합니다.</h1>
+      <p>공유받은 비밀번호를 입력해 주세요.</p>
+      <label class="sr-only" for="gatePassword">접속 비밀번호</label>
+      <input id="gatePassword" type="password" inputmode="numeric" maxlength="4" placeholder="비밀번호 4자리" autocomplete="current-password" required>
+      <button type="submit">입장하기 <span>→</span></button>
+      <small id="gateError" role="alert"></small>
+    </form>
+  </div>
+
+  <a class="skip" href="#main">본문 바로가기</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="청년나침반 홈">
+        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <span>청년나침반</span>
+      </a>
+      <nav class="nav" aria-label="주요 메뉴">
+        <a href="index.html#policies">정책 찾기</a>
+        <a href="housing.html">주택청약</a>
+        <a class="active" href="news.html">뉴스</a>
+        <a href="index.html#content">청년 콘텐츠</a>
+        <a href="index.html#guide">이용 가이드</a>
+      </nav>
+      <form class="news-header-search" id="headerNewsSearch" role="search">
+        <label class="sr-only" for="headerNewsInput">뉴스 검색</label>
+        <input id="headerNewsInput" type="search" placeholder="뉴스 검색" autocomplete="off">
+        <button type="submit" aria-label="뉴스 검색">⌕</button>
+      </form>
+      <button class="menu-button" id="menuButton" type="button" aria-label="메뉴 열기"><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="news-hero" aria-labelledby="newsTitle">
+      <div class="news-hero-inner">
+        <div class="news-title-block">
+          <span class="section-kicker">YOUTH NEWSROOM</span>
+          <h1 id="newsTitle">청년에게 필요한 최신 뉴스를 읽기 쉽게 모았습니다</h1>
+          <p>정책, 주거, 일자리, 금융 흐름을 빠르게 훑고 중요한 기사만 자세히 확인하세요.</p>
+        </div>
+        <div class="news-clock">
+          <small>업데이트 기준</small>
+          <strong id="updatedAt">임시 데이터</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="news-layout" aria-label="뉴스 주요 기사">
+      <article class="lead-story" id="leadStory"></article>
+      <aside class="headline-panel" aria-labelledby="headlineTitle">
+        <div class="headline-title">
+          <span class="section-kicker">HEADLINES</span>
+          <h2 id="headlineTitle">주요 헤드라인</h2>
+        </div>
+        <div class="headline-list" id="headlineList"></div>
+      </aside>
+    </section>
+
+    <section class="news-board" aria-labelledby="newsBoardTitle">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">LATEST</span>
+          <h2 id="newsBoardTitle">최신 뉴스</h2>
+          <p>네이버 뉴스 API 연동 전까지 임시 기사로 레이아웃을 확인할 수 있어요.</p>
+        </div>
+        <div class="news-actions">
+          <span id="newsResultLabel">전체 뉴스</span>
+          <select id="newsSort" aria-label="뉴스 정렬 기준">
+            <option value="latest">최신순</option>
+            <option value="relevance">추천순</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="news-controls" id="newsFilters" aria-label="뉴스 카테고리">
+        <button class="active" type="button" data-category="전체">전체</button>
+        <button type="button" data-category="정책">정책</button>
+        <button type="button" data-category="주거">주거</button>
+        <button type="button" data-category="일자리">일자리</button>
+        <button type="button" data-category="금융">금융</button>
+        <button type="button" data-category="생활">생활</button>
+      </div>
+
+      <div class="status-message show" id="newsStatus" role="status"><span></span> 뉴스 데이터를 준비하고 있어요.</div>
+      <div class="news-list" id="newsList" aria-live="polite"></div>
+      <button class="more-button" id="newsMore" type="button">뉴스 더 보기 <span>↓</span></button>
+    </section>
+  </main>
+
+  <footer><div class="footer-inner"><div><a class="brand footer-brand" href="index.html"><span class="brand-mark"><span></span></span><span>청년나침반</span></a><p>청년의 가능성이 정책과 만나는 곳.</p></div><div class="footer-links"><a href="index.html#policies">정책 찾기</a><a href="housing.html">주택청약</a><a href="news.html">뉴스</a><a href="index.html#content">청년 콘텐츠</a></div><p class="copyright">뉴스 데이터: 네이버 API 예정 · © 2026 청년나침반</p></div></footer>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="news.js"></script>
+</body>
+</html>
