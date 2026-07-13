@@ -3,7 +3,7 @@ name: Sync youth data
 on:
   workflow_dispatch:
   schedule:
-    - cron: '17 21 * * *'
+    - cron: '*/30 * * * *'
 
 permissions:
   contents: write
@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Fetch Ontong Youth data
+      - name: Fetch API data
         env:
           YOUTH_POLICY_API_KEY: ${{ secrets.YOUTH_POLICY_API_KEY }}
           YOUTH_CONTENT_API_KEY: ${{ secrets.YOUTH_CONTENT_API_KEY }}
@@ -36,6 +36,6 @@ jobs:
             echo "No data changes to commit"
             exit 0
           fi
-          git commit -m "Update youth policy data"
+          git commit -m "Update API data"
           git pull --rebase origin main
           git push origin HEAD:main

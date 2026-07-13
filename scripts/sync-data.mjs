@@ -69,7 +69,11 @@ for (const [name, feed] of Object.entries(feeds)) {
         : ['주택명', 'HOUSE_NM', 'houseNm', 'hsmpNm', 'pblancNm', 'SUPLY_NM', 'name', 'title'];
     const hasUsableItem = Array.isArray(items) && items.some(item => titleKeys.some(key => String(item?.[key] || '').trim()));
     if (!hasUsableItem) throw new Error('핵심 데이터 필드가 비어 있습니다. 기존 파일을 유지합니다.');
-    await writeFile(`data/${name}.json`, JSON.stringify(data), 'utf8');
+    await writeFile(`data/${name}.json`, JSON.stringify({
+      ...data,
+      syncedAt: new Date().toISOString(),
+      source: name === 'housing' ? '공공데이터포털 주택청약 API' : '온통청년 API'
+    }), 'utf8');
     console.log(`${name}: 동기화 완료`);
   } catch (error) {
     console.error(`${name}: ${error.message}`);failures++;

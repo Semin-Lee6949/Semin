@@ -4,7 +4,9 @@
 
 ## API 데이터 동기화
 
-온통청년은 GitHub Pages 브라우저 요청을 HTTP 403으로 차단합니다. 서버리스 대신 GitHub Actions가 매일 API 데이터를 정적 JSON으로 갱신하고 홈페이지는 `data/`의 JSON을 읽습니다.
+온통청년은 GitHub Pages 브라우저 요청을 HTTP 403으로 차단합니다. 주택청약 API 키도 브라우저에 노출하지 않기 위해 GitHub Actions가 API 데이터를 정적 JSON으로 갱신하고 홈페이지는 `data/`의 JSON을 읽습니다.
+
+주택청약 데이터는 30분마다 자동 동기화됩니다. 화면은 `data/housing.json`을 캐시 우회 방식으로 불러오고, 마지막 API 동기화 시각을 표시합니다. GitHub Pages만 쓰는 구조라 방문 순간마다 청약홈/API를 직접 호출하는 완전 실시간 방식은 아니지만, 별도 서버 없이 운영 가능한 준실시간 갱신 구조입니다.
 
 ### GitHub Actions 등록 방법
 
@@ -20,6 +22,6 @@
 6. `Sync youth data` 워크플로우를 열고 Run workflow 버튼을 눌러 한 번 수동 실행합니다.
 
 정책 API `/go/ythip/getPlcy`와 콘텐츠 API `/go/ythip/getContent`는 `pageSize=100`, `rtnType=json`으로 요청합니다.
-주택청약 API는 `serviceKey`, `page=1`, `perPage=100`, `returnType=JSON`으로 요청하고, 응답은 `data/housing.json`에 저장합니다.
+주택청약 API는 `serviceKey`, `page=1`, `perPage=1000`, `returnType=JSON`으로 모든 페이지를 요청하고, 응답은 `data/housing.json`에 저장합니다.
 
 2026-07-08 검증 결과 정책 키는 정상 인증되어 총 2,633건을 반환했습니다. 다만 정책명 등 핵심 필드는 제공처 응답에서 모두 `null`이었고, 콘텐츠 API는 HTTP 500을 반환했습니다. 제공처 장애 중에는 화면이 미리보기 데이터를 유지합니다.

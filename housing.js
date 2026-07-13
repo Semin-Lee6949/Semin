@@ -78,6 +78,11 @@ function filtered(){
 function escapeHtml(value){return clean(value).replace(/[&<>'"]/g,match=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[match]))}
 function safeUrl(value){try{const url=new URL(value,location.href);return ['http:','https:'].includes(url.protocol)?url.href:'#'}catch{return '#'}}
 function setStatus(message,type='warn'){const el=$('#housingStatus');el.innerHTML=`<span></span>${message}`;el.className=`status-message show ${type}`}
+function formatSyncedAt(value){
+  const date=new Date(value);
+  if(Number.isNaN(date.getTime()))return '';
+  return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',dateStyle:'medium',timeStyle:'short'}).format(date);
+}
 function render(){
   const items=filtered();
   $('#housingTotal').textContent=state.items.length.toLocaleString();
@@ -91,11 +96,12 @@ function applyHousingData(data){
   if(!items.length)throw new Error('usable fields empty');
   state.items=items.map(normalizeHousing);
   const openCount=state.items.filter(isOpenOrUpcoming).length;
-  setStatus(`동기화된 주택청약 데이터 ${state.items.length.toLocaleString()}건을 확인했습니다. 현재 접수중·예정 공고는 ${openCount.toLocaleString()}건입니다.`,'ok');
+  const syncedAt=formatSyncedAt(data.syncedAt);
+  setStatus(`주택청약 API 동기화 데이터 ${state.items.length.toLocaleString()}건을 확인했습니다. 현재 접수중·예정 공고는 ${openCount.toLocaleString()}건입니다.${syncedAt?` 마지막 갱신: ${syncedAt}`:''}`,'ok');
 }
 async function loadHousing(){
   try{
-    const response=await fetch('data/housing.json',{headers:{Accept:'application/json'},cache:'no-cache'});
+    const response=await fetch(`data/housing.json?v=${Date.now()}`,{headers:{Accept:'application/json'},cache:'no-store'});
     if(!response.ok)throw new Error(`DATA ${response.status}`);
     applyHousingData(await response.json());
   }catch(error){
